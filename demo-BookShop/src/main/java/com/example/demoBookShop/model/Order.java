@@ -1,4 +1,4 @@
-package model;
+package com.example.demoBookShop.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity(name="order")
+@Entity
+@Table(name="orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

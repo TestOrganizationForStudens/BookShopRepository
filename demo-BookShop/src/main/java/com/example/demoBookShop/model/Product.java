@@ -1,4 +1,4 @@
-package model;
+package com.example.demoBookShop.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name="product")
+@Entity
+@Table(name="products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -67,7 +68,7 @@ public class Product {
 
     @Column(name="image",
             nullable = false,
-            columnDefinition = "VARCHAR(MAX)")
+            columnDefinition = "TEXT")
     @Setter
     @Getter
     private String image;

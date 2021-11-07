@@ -1,11 +1,12 @@
-package model;
+package com.example.demoBookShop.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name="products_order")
+@Entity
+@Table(name="products_order")
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
