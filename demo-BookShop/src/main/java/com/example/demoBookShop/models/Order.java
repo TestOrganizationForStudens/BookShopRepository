@@ -1,4 +1,4 @@
-package com.example.demoBookShop.model;
+package com.example.demoBookShop.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name="orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_order",
             updatable = false)
     @Setter
@@ -39,17 +39,17 @@ public class Order {
     @Getter
     private Double price;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @Setter
+    @Getter
     private List<ProductOrder> productOrderList;
 
     public Order() {
     }
 
-    public Order(Long id,
-                 LocalDateTime dateTime,
+    public Order(LocalDateTime dateTime,
                  Long userId,
                  Double price) {
-        this.id = id;
         this.dateTime = dateTime;
         this.userId = userId;
         this.price = price;

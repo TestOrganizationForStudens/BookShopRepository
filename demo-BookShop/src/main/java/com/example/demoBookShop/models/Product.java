@@ -1,5 +1,6 @@
-package com.example.demoBookShop.model;
+package com.example.demoBookShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name="products")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_product",
             updatable = false)
     @Setter
@@ -73,12 +75,30 @@ public class Product {
     @Getter
     private String image;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     @Setter
     @Getter
     private List<ProductOrder> productOrdersList;
 
     public Product() {}
+
+    public Product(String productName,
+                   String category,
+                   String author,
+                   String publishingHouse,
+                   Integer year,
+                   Double price,
+                   String description,
+                   String image) {
+        this.productName = productName;
+        this.category = category;
+        this.author = author;
+        this.publishingHouse = publishingHouse;
+        this.year = year;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+    }
 
     public Product(Long id,
                    String productName,
@@ -88,7 +108,8 @@ public class Product {
                    Integer year,
                    Double price,
                    String description,
-                   String image) {
+                   String image,
+                   List<ProductOrder> productOrdersList) {
         this.id = id;
         this.productName = productName;
         this.category = category;
@@ -98,6 +119,7 @@ public class Product {
         this.price = price;
         this.description = description;
         this.image = image;
+        this.productOrdersList = productOrdersList;
     }
 
     @Override
