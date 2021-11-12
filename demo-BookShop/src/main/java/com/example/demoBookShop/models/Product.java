@@ -68,6 +68,7 @@ public class Product {
     @Getter
     private String description;
 
+    @Lob
     @Column(name="image",
             nullable = false,
             columnDefinition = "TEXT")
