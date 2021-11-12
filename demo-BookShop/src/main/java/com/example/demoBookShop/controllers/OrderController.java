@@ -1,7 +1,6 @@
 package com.example.demoBookShop.controllers;
 
 import com.example.demoBookShop.models.Order;
-import com.example.demoBookShop.models.Product;
 import com.example.demoBookShop.servicies.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

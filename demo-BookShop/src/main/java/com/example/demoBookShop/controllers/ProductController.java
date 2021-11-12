@@ -3,6 +3,8 @@ package com.example.demoBookShop.controllers;
 import com.example.demoBookShop.models.Product;
 import com.example.demoBookShop.servicies.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,18 +31,29 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product create(@RequestBody Product product){
-        return productService.create(product);
+    public ResponseEntity<Object> create(@RequestBody Product product){
+        if (productService.create(product)==null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        Product product= findProductById(id);
+        if(product==null){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
+        }
         //also need to check for children records before deleting.
         productService.delete(id);
+        return  ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
         @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public Product update(@PathVariable Long id, @RequestBody Product product){
-    return  productService.update(id, product);
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Product product){
+        if (productService.update(id, product)==null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
+        }
+            return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 }

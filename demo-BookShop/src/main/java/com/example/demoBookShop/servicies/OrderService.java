@@ -1,12 +1,10 @@
 package com.example.demoBookShop.servicies;
 
 import com.example.demoBookShop.models.Order;
-import com.example.demoBookShop.models.Product;
 import com.example.demoBookShop.repositories.OrderRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
