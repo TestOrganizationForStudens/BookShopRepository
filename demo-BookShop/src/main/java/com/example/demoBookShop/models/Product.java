@@ -1,5 +1,6 @@
 package com.example.demoBookShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -75,6 +76,7 @@ public class Product {
     @Getter
     private String image;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     @Setter
     @Getter
@@ -100,6 +102,25 @@ public class Product {
         this.image = image;
     }
 
+    public Product(Long id,
+                   String productName,
+                   String category,
+                   String author,
+                   String publishingHouse,
+                   Integer year,
+                   Double price,
+                   String description,
+                   String image) {
+        this.id=id;
+        this.productName = productName;
+        this.category = category;
+        this.author = author;
+        this.publishingHouse = publishingHouse;
+        this.year = year;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+    }
     public Product(Long id,
                    String productName,
                    String category,

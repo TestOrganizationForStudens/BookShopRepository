@@ -25,12 +25,11 @@ public class Order {
     @Getter
     private LocalDateTime dateTime;
 
-    @Column(name="id_user",
-            nullable = false,
-            columnDefinition = "BIGINT")
-    @Setter
-    @Getter
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id",
+            referencedColumnName = "id_user",
+            nullable = false)
+    User userData;
 
     @Column(name="price",
             nullable = false,
@@ -48,11 +47,11 @@ public class Order {
     }
 
     public Order(LocalDateTime dateTime,
-                 Long userId,
+                 User user,
                  Double price) {
         this.dateTime = dateTime;
-        this.userId = userId;
         this.price = price;
+        this.userData=user;
     }
 
     @Override
@@ -60,7 +59,6 @@ public class Order {
         return "Odrer{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
-                ", userId=" + userId +
                 ", price=" + price +
                 '}';
     }

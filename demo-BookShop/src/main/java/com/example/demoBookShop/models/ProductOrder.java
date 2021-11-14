@@ -20,12 +20,16 @@ public class ProductOrder {
     @JoinColumn(name = "order_id",
             referencedColumnName = "id_order",
             nullable = false)
+    @Setter
+    @Getter
     Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_id",
             referencedColumnName = "id_product",
             nullable = false)
+    @Setter
+    @Getter
     Product product;
 
     @Column(name="amount",
@@ -37,6 +41,11 @@ public class ProductOrder {
 
     public ProductOrder(Order order, Product product, Integer amount) {
         this.order = order;
+        this.product = product;
+        this.amount = amount;
+    }
+
+    public ProductOrder(Product product, Integer amount) {
         this.product = product;
         this.amount = amount;
     }

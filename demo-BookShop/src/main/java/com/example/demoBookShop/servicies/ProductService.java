@@ -34,9 +34,14 @@ public class ProductService {
         return productRepository.saveAndFlush(product);
     }
 
-    public void delete(Long id) {
+    public Product delete(Long id) {
+        Product product = findProductById(id);
+        if(product==null){
+            return null;
+        }
         //also need to check for children records before deleting.
         productRepository.deleteById(id);
+        return product;
     }
 
     public Product update(Long id, Product product) {
