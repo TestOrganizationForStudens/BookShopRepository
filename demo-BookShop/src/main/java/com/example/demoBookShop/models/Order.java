@@ -1,5 +1,7 @@
 package com.example.demoBookShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="orders")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +28,13 @@ public class Order {
     @Getter
     private LocalDateTime dateTime;
 
-    @Column(name="id_user",
-            nullable = false,
-            columnDefinition = "BIGINT")
+    @ManyToOne
+    @JoinColumn(name = "user_id",
+            referencedColumnName = "id_user",
+            nullable = false)
     @Setter
     @Getter
-    private Long userId;
+    User userData;
 
     @Column(name="price",
             nullable = false,
@@ -39,6 +43,7 @@ public class Order {
     @Getter
     private Double price;
 
+   // @JsonIgnore
     @OneToMany(mappedBy = "order")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     @Setter
     @Getter
@@ -48,11 +53,23 @@ public class Order {
     }
 
     public Order(LocalDateTime dateTime,
-                 Long userId,
+                 User user,
                  Double price) {
         this.dateTime = dateTime;
-        this.userId = userId;
         this.price = price;
+        this.userData=user;
+    }
+
+    public Order(Long id,
+                 LocalDateTime dateTime,
+                 User userData,
+                 Double price,
+                 List<ProductOrder> productOrderList) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.userData = userData;
+        this.price = price;
+        this.productOrderList = productOrderList;
     }
 
     @Override
@@ -60,7 +77,6 @@ public class Order {
         return "Odrer{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
-                ", userId=" + userId +
                 ", price=" + price +
                 '}';
     }
