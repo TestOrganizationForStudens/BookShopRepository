@@ -76,7 +76,6 @@ public class User {
     @Getter
     private String password;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "userData")
     List<Order> listOfOrder;
 

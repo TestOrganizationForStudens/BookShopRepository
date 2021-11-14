@@ -1,5 +1,8 @@
 package com.example.demoBookShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="products_order")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +24,8 @@ public class ProductOrder {
     @JoinColumn(name = "order_id",
             referencedColumnName = "id_order",
             nullable = false)
+    @JsonIgnore
+   // @JsonProperty(access = Access.WRITE_ONLY)
     @Setter
     @Getter
     Order order;
@@ -28,6 +34,7 @@ public class ProductOrder {
     @JoinColumn(name = "product_id",
             referencedColumnName = "id_product",
             nullable = false)
+   // @JsonIgnore
     @Setter
     @Getter
     Product product;
@@ -53,4 +60,20 @@ public class ProductOrder {
     public ProductOrder() {
 
     }
+
+//    public Order getOrder() {
+//        return order;
+//    }
+//
+//    public void setOrder(Order order) {
+//        this.order = order;
+//    }
+//
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 }
