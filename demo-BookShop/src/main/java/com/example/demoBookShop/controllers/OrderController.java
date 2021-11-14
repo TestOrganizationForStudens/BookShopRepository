@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
+@CrossOrigin
 public class OrderController {
     @Autowired
     private final OrderService orderService;
