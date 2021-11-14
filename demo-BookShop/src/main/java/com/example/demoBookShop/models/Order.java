@@ -43,7 +43,7 @@ public class Order {
     @Getter
     private Double price;
 
-   // @JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "order")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     @Setter
     @Getter
