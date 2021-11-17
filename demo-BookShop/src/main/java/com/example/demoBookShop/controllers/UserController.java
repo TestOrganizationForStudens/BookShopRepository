@@ -62,9 +62,9 @@ public class UserController {
 //    @PostConstruct
 //    public void fillData() {
 //     List<User> usersList= List.of(
-//                                     new User("Andercou", "Alexandru", "andercou.alexandru@gmail.com", "Admin", "Cluj-Napoca , str Lalelelor, nr. 4", "0742512345", "1234123412341234", "password1"),
-//                                     new User("Cioara", "Iulia", "cioara.iulia@gmail.com", "Admin", "Cluj-Napoca , str Islazului, nr. 41", "0742512345", "1234123412341234", "password2"),
-//                                     new User("Lutencu", "Octavian", "lutencu.octavian@gmail.com", "Admin", "Cluj-Napoca , str Plopilor, nr. 1", "0742512345", "1234123412341234", "password2")
+//                                     new User("Andercou", "Alexandru", "andercou.alexandru@gmail.com", "Admin", "Cluj-Napoca , str Lalelelor, nr. 4", "0742512345", "1234123412341234", "password1", "Alex"),
+//                                     new User("Cioara", "Iulia", "cioara.iulia@gmail.com", "Admin", "Cluj-Napoca , str Islazului, nr. 41", "0742512345", "1234123412341234", "password2", "Iulea"),
+//                                     new User("Lutencu", "Octavian", "lutencu.octavian@gmail.com", "Admin", "Cluj-Napoca , str Plopilor, nr. 1", "0742512345", "1234123412341234", "password2", "Octav")
 //     );
 //     usersList.forEach(this.userService::create);
 //    }
