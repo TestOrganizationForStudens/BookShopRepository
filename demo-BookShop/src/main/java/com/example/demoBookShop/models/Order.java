@@ -1,7 +1,6 @@
 package com.example.demoBookShop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,41 +11,46 @@ import java.util.List;
 @Entity
 @Table(name="orders")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_order",
             updatable = false)
-    @Setter
-    @Getter
+    //@JsonProperty("idOrder")
+    //@Setter
+    //@Getter
     private Long id;
 
     @Column(name="date_time",
             nullable = false,
             columnDefinition = "DATETIME")
-    @Setter
-    @Getter
+    //@Setter
+    //@Getter
     private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id",
             referencedColumnName = "id_user",
             nullable = false)
-    @Setter
-    @Getter
+    //@Setter
+    //@Getter
     User userData;
 
     @Column(name="price",
             nullable = false,
             columnDefinition = "DOUBLE")
-    @Setter
-    @Getter
+    //@Setter
+    //@Getter
     private Double price;
 
-    @JsonIgnore
+    //@JsonManagedReference
+    //@JsonIgnore
     @OneToMany(mappedBy = "order")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
-    @Setter
-    @Getter
+    //@Setter
+    //@Getter
     private List<ProductOrder> productOrderList;
 
     public Order() {
@@ -69,6 +73,46 @@ public class Order {
         this.dateTime = dateTime;
         this.userData = userData;
         this.price = price;
+        this.productOrderList = productOrderList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public User getUserData() {
+        return userData;
+    }
+
+    public void setUserData(User userData) {
+        this.userData = userData;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public List<ProductOrder> getProductOrderList() {
+        return productOrderList;
+    }
+
+    public void setProductOrderList(List<ProductOrder> productOrderList) {
         this.productOrderList = productOrderList;
     }
 
