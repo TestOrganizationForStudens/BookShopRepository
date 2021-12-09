@@ -1,6 +1,8 @@
 package com.example.demoBookShop.validators;
 
+import com.example.demoBookShop.exceptions.AppException;
+
 public interface Validator<T> {
 
-    boolean validation(T t);
+    void validation(T t) throws AppException;
 }

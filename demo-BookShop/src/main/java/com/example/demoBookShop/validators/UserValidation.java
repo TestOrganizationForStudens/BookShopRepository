@@ -1,5 +1,6 @@
 package com.example.demoBookShop.validators;
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.User;
 
 import java.util.regex.Matcher;
@@ -7,34 +8,33 @@ import java.util.regex.Pattern;
 
 public class UserValidation implements Validator<User>{
     @Override
-    public boolean validation(User user) {
+    public void validation(User user) throws AppException {
 
         if(user==null){
-            return false;
+            throw new AppException("User is null");
         }else if(user.getFirstName().isBlank()){
-            return false;
+            throw new AppException("Field firstName is empty");
         }else if (user.getLastName().isBlank()){
-            return false;
+            throw new AppException("Field lastName is empty");
         }else if(user.getEmail().isBlank()){
-            return false;
+            throw new AppException("Field email is empty");
         }else if(testMatcher(user.getEmail(), "^(.+)@(.+)$")){
-            return false;
+            throw new AppException("String is not email pattern");
         }else if(user.getRole().isBlank()){
-            return false;
+            throw new AppException("Field role is empty");
         }else if(user.getAddress().isBlank()){
-            return false;
+            throw new AppException("Field address is empty");
         }else if(user.getPhone().isBlank()){
-            return false;
+            throw new AppException("Field phone is empty");
         }else if(testMatcher(user.getPhone(), "07\\d{8}")){
-            return false;
+            throw new AppException("String is not phone pattern");
         }else if(user.getCardNumber().isBlank()){
-            return false;
+            throw new AppException("Field cardNumber is empty");
         } else if(testMatcher(user.getCardNumber(), "\\d{16}$")){
-            return false;
+            throw new AppException("String is not cardNumber pattern");
         }else if(user.getPassword().isBlank()){
-            return false;
+            throw new AppException("Field password is empty");
         }
-            return true;
     }
 
     private boolean testMatcher(String str, String regex){

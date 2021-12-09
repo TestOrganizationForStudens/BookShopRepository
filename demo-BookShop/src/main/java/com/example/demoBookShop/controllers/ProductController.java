@@ -1,5 +1,6 @@
 package com.example.demoBookShop.controllers;
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.Product;
 import com.example.demoBookShop.servicies.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,40 +23,127 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<Object> getAllProducts(){
+        List<Product> products=productService.getAllProducts();
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+
+    @GetMapping("findByPrice")
+    public ResponseEntity<Object> findByPrice(@RequestParam("price") Double price){
+        try {
+            List<Product> products = productService.findByPrice(price);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByPriceThatAreCheaper")
+    public ResponseEntity<Object> findByPriceThatAreCheaper(@RequestParam("price") Double price){
+        try {
+            List<Product> products = productService.findByPriceThatAreCheaper(price);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByPriceThatAreExpensive")
+    public ResponseEntity<Object> findByPriceThatAreExpensive(@RequestParam("price") Double price){
+        try{
+            List<Product> products= productService.findByPriceThatAreExpensive(price);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("publishingHouse")
+    public ResponseEntity<Object> publishingHouse(@RequestParam("publishHouse") String publishHouse){
+        try {
+            List<Product> products = productService.publishingHouse(publishHouse);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByYear")
+    public ResponseEntity<Object> findByYear(@RequestParam("year") Integer year){
+        try{
+            List<Product> products=productService.findByYear(year);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByProductName")
+    public ResponseEntity<Object> findByProductName(@RequestParam("productName") String productName){
+        try{
+            List<Product> products =productService.findByProductName(productName);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByCategory")
+    public ResponseEntity<Object> findByCategory(@RequestParam("category") String category){
+        try{
+            List<Product> products = productService.findByCategory(category);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByAuthor")
+    public ResponseEntity<Object> findByAuthor(@RequestParam("author") String author){
+        try{
+        List<Product> products = productService.findByAuthor(author);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @GetMapping
     @RequestMapping("{id}")
-    public Product findProductById(@PathVariable Long id){
-        return productService.findProductById(id);
+    public ResponseEntity<Object> findProductById(@PathVariable Long id){
+        Product product= productService.findProductById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody Product product){
-        if (productService.create(product)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
+        try{
+            productService.create(product);
+            return ResponseEntity.status(HttpStatus.OK).body(product);
+        }catch(AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        Product product=productService.delete(id);
-        if(product==null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
+        try{
+            //also need to check for children records before deleting.
+            Product product=productService.delete(id);
+            return  ResponseEntity.status(HttpStatus.OK).body(product);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        //also need to check for children records before deleting.
-        return  ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
         @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Product product){
-        if (productService.update(id, product)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(product);
-        }
+        try{
+            productService.update(id, product);
             return ResponseEntity.status(HttpStatus.OK).body(product);
+        }catch(AppException ex) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
+        }
     }
 
 

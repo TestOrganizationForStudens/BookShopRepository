@@ -1,29 +1,29 @@
 package com.example.demoBookShop.validators;
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.Product;
 
 public class ProductValidation implements Validator<Product>{
     @Override
-    public boolean validation(Product product) {
+    public void validation(Product product) throws AppException {
         if(product==null){
-            return false;
+            throw new AppException("Product is NULL");
         }else if(product.getProductName().isBlank()){
-            return false;
+            throw new AppException("ProductName is Blank");
         }else if(product.getCategory().isBlank()){
-            return false;
+            throw new AppException("Category is Blank");
         }else if(product.getAuthor().isBlank()){
-            return false;
+            throw new AppException("Author is Blank");
         }else if(product.getPublishingHouse().isBlank()){
-            return false;
+            throw new AppException("PublishHouse is Blank");
         }else if(product.getYear()==null){
-            return false;
+            throw new AppException("Year is NULL");
         }else if (product.getPrice()==null){
-            return false;
+            throw new AppException("Price is NULL");
         }else if(product.getDescription().isBlank()){
-            return false;
+            throw new AppException("Description is Blank");
         }else if(product.getImage().isBlank()){
-            return false;
+            throw new AppException("Image is Blank");
         }
-        return true;
     }
 }

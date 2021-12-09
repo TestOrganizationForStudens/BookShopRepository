@@ -19,38 +19,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_order",
             updatable = false)
-    //@JsonProperty("idOrder")
-    //@Setter
-    //@Getter
     private Long id;
 
     @Column(name="date_time",
             nullable = false,
             columnDefinition = "DATETIME")
-    //@Setter
-    //@Getter
     private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id",
             referencedColumnName = "id_user",
             nullable = false)
-    //@Setter
-    //@Getter
     User userData;
 
     @Column(name="price",
             nullable = false,
             columnDefinition = "DOUBLE")
-    //@Setter
-    //@Getter
     private Double price;
 
-    //@JsonManagedReference
-    //@JsonIgnore
     @OneToMany(mappedBy = "order")//, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
-    //@Setter
-    //@Getter
     private List<ProductOrder> productOrderList;
 
     public Order() {

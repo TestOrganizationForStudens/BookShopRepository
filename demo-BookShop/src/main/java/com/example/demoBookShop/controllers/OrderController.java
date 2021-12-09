@@ -1,5 +1,6 @@
 package com.example.demoBookShop.controllers;
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.Order;
 import com.example.demoBookShop.models.Product;
 import com.example.demoBookShop.models.ProductOrder;
@@ -7,6 +8,7 @@ import com.example.demoBookShop.models.User;
 import com.example.demoBookShop.servicies.OrderService;
 import com.example.demoBookShop.servicies.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,41 +32,78 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders(){
-        return orderService.getAllOrders();
+    public ResponseEntity<Object> getAllOrders() {
+        List<Order> orders=orderService.getAllOrders();
+        return ResponseEntity.status(HttpStatus.OK).body(orders);
+
+    }
+
+    @GetMapping("findByPrice")
+    public ResponseEntity<Object> findByPrice(@RequestParam("price") Double price){
+        try {
+            List<Order> orders = orderService.findByPrice(price);
+            return ResponseEntity.status(HttpStatus.OK).body(orders);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findByUserData")
+    public ResponseEntity<Object> findByUserData(@RequestParam("user") User userData){
+        try {
+            List<Order> orders = orderService.findByUserData(userData);
+            return ResponseEntity.status(HttpStatus.OK).body(orders);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("Date")
+    public ResponseEntity<Object> findByDateTime(@DateTimeFormat (pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam("dateTime") LocalDateTime dateTime){
+        try {
+            List<Order> orders = orderService.findByDateTime(dateTime);
+            return ResponseEntity.status(HttpStatus.OK).body(orders);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @GetMapping
     @RequestMapping("{id}")
-    public Order findOrderById(@PathVariable Long id){
-        return orderService.findOrderById(id);
+    public ResponseEntity<Object>findOrderById(@PathVariable Long id){
+        Order order=orderService.findOrderById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody Order order){
-        if (orderService.create(order)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(order);
+        try {
+            orderService.create(order);
+            return ResponseEntity.status(HttpStatus.OK).body(order);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        Order order =orderService.delete(id);
-        if(order==null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(order);
+        try{
+            //also need to check for children records before deleting.
+            Order order =orderService.delete(id);
+            return  ResponseEntity.status(HttpStatus.OK).body(order);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        //also need to check for children records before deleting.
-        return  ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Order order){
-
-        if (orderService.update(id, order)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(order);
+        try{
+            orderService.update(id, order);
+            return ResponseEntity.status(HttpStatus.OK).body(order);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
 //    @PostConstruct

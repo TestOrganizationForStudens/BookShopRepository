@@ -65,6 +65,7 @@ public class User {
             columnDefinition = "VARCHAR(100)")
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userData")
     List<Order> listOfOrder;
 
