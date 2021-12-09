@@ -1,6 +1,7 @@
 package com.example.demoBookShop.controllers;
 
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.User;
 import com.example.demoBookShop.servicies.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,40 +24,91 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUser(){
-        return userService.getAllUser();
+    public ResponseEntity<Object> getAllUser(){
+        List<User> users=userService.getAllUser();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @GetMapping
     @RequestMapping("{id}")
-    public User findUserById(@PathVariable Long id){
-        return userService.findUserById(id);
+    public ResponseEntity<Object> findUserById(@PathVariable Long id){
+        try{
+            User user= userService.findUserById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not exist such user with this id="+id);
+        }
+    }
+
+    @GetMapping("findUserByEmail")
+    public ResponseEntity<Object> findUserByEmail(@RequestParam ("email") String email){
+        try{
+            User user=userService.findByEmail(email);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findUserByFirstName")
+    public ResponseEntity<Object> findUserByFirstName(@RequestParam ("firstName") String firstName){
+        try{
+            User user=userService.findByFirstName(firstName);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findUserByLastName")
+    public ResponseEntity<Object> findUserByLastName(@RequestParam ("lastName") String lastName){
+        try{
+            User user=userService.findByLastName(lastName);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("findUserByUserName")
+    public ResponseEntity<Object> findUserByUserName(@RequestParam ("userName") String userName){
+        try{
+            User user=userService.findByUserName(userName);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody User user){
-        if (userService.create(user)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+    public ResponseEntity<Object> createUser(@RequestBody User user){
+        try{
+            userService.create(user);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
-        User user=userService.delete(id);
-        if(user==null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
+        try{
+            //also need to check for children records before deleting.
+            User user=userService.delete(id);
+            return  ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        //also need to check for children records before deleting.
-        return  ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody User user){
-        if (userService.update(id, user)==null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user){
+        try{
+            userService.update(id, user);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (AppException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
 //    @PostConstruct

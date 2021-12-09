@@ -1,21 +1,21 @@
 package com.example.demoBookShop.validators;
 
+import com.example.demoBookShop.exceptions.AppException;
 import com.example.demoBookShop.models.Order;
 
 public class OrderValidation implements Validator<Order>{
     @Override
-    public boolean validation(Order order) {
+    public void validation(Order order) throws AppException {
         if (order == null) {
-            return false;
+            throw new AppException("Order is NULL");
         } else if (order.getDateTime() == null) {
-            return false;
+            throw new AppException("Time and date don't set");
         } else if (order.getPrice() == null) {
-            return false;
+            throw new AppException("Price doesn't set");
         }else if(order.getProductOrderList()==null){
-            return false;
+            throw new AppException("Product list is NULL, please select product");
         }else if(order.getProductOrderList().isEmpty()){
-            return false;
+            throw new AppException("Please select product");
         }
-        return true;
     }
 }
