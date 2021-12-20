@@ -2,6 +2,7 @@ package com.example.demoBookShop.models;
 
 import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,62 +15,57 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_user",
+    @Column(name = "id_user",
             updatable = false)
     private Long id;
 
-    @Column(name="first_name",
+    @Column(name = "first_name",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String firstName;
 
-    @Column(name="last_name",
+    @Column(name = "last_name",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String lastName;
 
-    @Column(name="user_name",
+    @Column(name = "user_name",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String userName;
 
-    @Column(name="email",
+    @Column(name = "email",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String email;
 
-    @Column(name="role",
-            nullable = false,
-            columnDefinition = "VARCHAR(100)")
-    private String role;
+//    @Column(name="role",
+//            nullable = false,
+//            columnDefinition = "VARCHAR(100)")
+//    private String role;
 
-    @Column(name="address",
+    @Column(name = "address",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String address;
 
-    @Column(name="phone",
+    @Column(name = "phone",
             nullable = false,
             columnDefinition = "VARCHAR(10)")
     private String phone;
 
-    @Column(name="cardNumber",
+    @Column(name = "cardNumber",
             nullable = false,
             columnDefinition = "VARCHAR(16)")
     private String cardNumber;
 
-    @Column(name="password",
+    @Column(name = "password",
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String password;
 
-    @ManyToMany(fetch= FetchType.EAGER)
-    @JoinTable(
-            name="user_role",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id")
-    )
-    private Collection<Role> roles;
+    @OneToMany(mappedBy = "userDt",fetch= FetchType.EAGER)
+    private Collection<UserRole> userRole;
 
     @JsonIgnore
     @OneToMany(mappedBy = "userData")
@@ -81,7 +77,6 @@ public class User {
     public User(String firstName,
                 String lastName,
                 String email,
-                String role,
                 String address,
                 String phone,
                 String cardNumber,
@@ -90,20 +85,11 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.userName=userName;
-        this.role = role;
+        this.userName = userName;
         this.address = address;
         this.phone = phone;
         this.cardNumber = cardNumber;
         this.password = password;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public Long getId() {
@@ -130,20 +116,20 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getAddress() {
@@ -178,19 +164,19 @@ public class User {
         this.password = password;
     }
 
+    public Collection<UserRole> getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Collection<UserRole> userRole) {
+        this.userRole = userRole;
+    }
+
     public List<Order> getListOfOrder() {
         return listOfOrder;
     }
 
     public void setListOfOrder(List<Order> listOfOrder) {
         this.listOfOrder = listOfOrder;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
     }
 }

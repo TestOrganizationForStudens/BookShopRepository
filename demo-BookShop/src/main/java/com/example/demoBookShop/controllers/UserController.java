@@ -10,17 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin
 public class UserController {
-    @Autowired
-    private final UserService userService;
 
+    private final UserService userService;
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -86,7 +90,8 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody User user, @RequestBody Role role){
         try{
             userService.create(user, role);
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString());
+            return ResponseEntity.created(uri).body(user);
         }catch (AppException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
@@ -97,9 +102,9 @@ public class UserController {
         try{
             //also need to check for children records before deleting.
             User user=userService.delete(id);
-            return  ResponseEntity.status(HttpStatus.OK).body(user);
+            return  ResponseEntity.ok().body(user);
         }catch (AppException ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
@@ -115,11 +120,21 @@ public class UserController {
 
 //    @PostConstruct
 //    public void fillData() {
-//     List<User> usersList= List.of(
-//                                     new User("Andercou", "Alexandru", "andercou.alexandru@gmail.com", "Admin", "Cluj-Napoca , str Lalelelor, nr. 4", "0742512345", "1234123412341234", "password1", "Alex"),
-//                                     new User("Cioara", "Iulia", "cioara.iulia@gmail.com", "Admin", "Cluj-Napoca , str Islazului, nr. 41", "0742512345", "1234123412341234", "password2", "Iulea"),
-//                                     new User("Lutencu", "Octavian", "lutencu.octavian@gmail.com", "Admin", "Cluj-Napoca , str Plopilor, nr. 1", "0742512345", "1234123412341234", "password2", "Octav")
-//     );
-//     usersList.forEach(this.userService::create);
+//        List<String> roles = List.of("ROLE_ADMIN", "ROLE_USER");
+//        roles.forEach(this.userService::createRole);
+//        Role adminRole = new Role("ROLE_ADMIN");
+//
+//        List<User> usersList = List.of(
+//                new User("Andercou", "Alexandru", "andercou.alexandru@gmail.com", "Cluj-Napoca , str Lalelelor, nr. 4", "0742512345", "1234123412341234", "password1", "Alex"),
+//                new User("Cioara", "Iulia", "cioara.iulia@gmail.com", "Cluj-Napoca , str Islazului, nr. 41", "0742512345", "1234123412341234", "password2", "Iulea"),
+//                new User("Lutencu", "Octavian", "lutencu.octavian@gmail.com", "Cluj-Napoca , str Plopilor, nr. 1", "0742512345", "1234123412341234", "password2", "Octav")
+//        );
+//        usersList.forEach(user -> {
+//            try {
+//                userService.create(user, adminRole);
+//            } catch (AppException e) {
+//                e.printStackTrace();
+//            }
+//        });
 //    }
 }
