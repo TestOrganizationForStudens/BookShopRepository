@@ -2,7 +2,9 @@ package com.example.demoBookShop.controllers;
 
 
 import com.example.demoBookShop.exceptions.AppException;
+import com.example.demoBookShop.models.Role;
 import com.example.demoBookShop.models.User;
+import com.example.demoBookShop.repositories.RoleRepository;
 import com.example.demoBookShop.servicies.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,9 +83,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody User user){
+    public ResponseEntity<Object> createUser(@RequestBody User user, @RequestBody Role role){
         try{
-            userService.create(user);
+            userService.create(user, role);
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }catch (AppException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

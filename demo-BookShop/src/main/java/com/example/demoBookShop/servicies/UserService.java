@@ -1,22 +1,30 @@
 package com.example.demoBookShop.servicies;
 
 import com.example.demoBookShop.exceptions.AppException;
+import com.example.demoBookShop.models.Role;
 import com.example.demoBookShop.models.User;
+import com.example.demoBookShop.repositories.RoleRepository;
 import com.example.demoBookShop.repositories.UserRepository;
+import com.example.demoBookShop.validators.RoleValidation;
 import com.example.demoBookShop.validators.UserValidation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
-    @Autowired
-    private final UserRepository userRepository;
-    private final UserValidation userValidation=new UserValidation();
 
-    public UserService(UserRepository userRepository) {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserValidation userValidation=new UserValidation();
+    private final RoleValidation roleValidation=new RoleValidation();
+    @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.roleRepository=roleRepository;
         this.userRepository = userRepository;
     }
 
@@ -69,8 +77,12 @@ public class UserService {
         return user;
     }
 
-    public User create(User user) throws AppException{
+    public User create(User user, Role role) throws AppException{
         userValidation.validation(user);
+        roleValidation.validation(role);
+        Role roleFromDataBase=roleRepository.findByRole(role.getRole())
+                .orElseThrow(()->new AppException("No such role in database"));
+        user.getRoles().add(roleFromDataBase);
         return userRepository.saveAndFlush(user);
     }
 

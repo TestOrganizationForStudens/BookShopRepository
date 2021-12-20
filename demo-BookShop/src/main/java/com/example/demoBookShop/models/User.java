@@ -1,10 +1,8 @@
 package com.example.demoBookShop.models;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -64,6 +62,14 @@ public class User {
             nullable = false,
             columnDefinition = "VARCHAR(100)")
     private String password;
+
+    @ManyToMany(fetch= FetchType.EAGER)
+    @JoinTable(
+            name="user_role",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
+    )
+    private Collection<Role> roles;
 
     @JsonIgnore
     @OneToMany(mappedBy = "userData")
@@ -178,5 +184,13 @@ public class User {
 
     public void setListOfOrder(List<Order> listOfOrder) {
         this.listOfOrder = listOfOrder;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 }
