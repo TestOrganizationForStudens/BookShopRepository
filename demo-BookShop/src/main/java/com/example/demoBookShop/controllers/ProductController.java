@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
-@CrossOrigin
+@CrossOrigin(origins = "https://localhost:4200")//, allowedHeaders = "*")
 public class ProductController {
     @Autowired
     private final ProductService productService;
@@ -22,7 +22,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping(path="/all")
     public ResponseEntity<Object> getAllProducts(){
         List<Product> products=productService.getAllProducts();
         return ResponseEntity.status(HttpStatus.OK).body(products);
@@ -115,7 +115,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
-    @PostMapping
+    @PostMapping(path="/add")
     public ResponseEntity<Object> create(@RequestBody Product product){
         try{
             productService.create(product);

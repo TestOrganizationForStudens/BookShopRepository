@@ -17,33 +17,23 @@ public class ProductOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_product_order",
             updatable = false)
-    //@JsonProperty("idProductOrder")
-    //@Setter
-    //@Getter
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "order_id",
             referencedColumnName = "id_order",
             nullable = false)
-    //@Setter
-    //@Getter
     Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_id",
             referencedColumnName = "id_product",
             nullable = false)
-    //@Setter
-    //@Getter
-    //@JsonBackReference
     Product product;
 
     @Column(name="amount",
             nullable = false,
             columnDefinition = "INT")
-    //@Setter
-    //@Getter
     private Integer amount;
 
     public ProductOrder(Order order, Product product, Integer amount) {

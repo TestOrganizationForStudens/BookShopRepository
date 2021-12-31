@@ -20,8 +20,6 @@ public class UserValidation implements Validator<User>{
             throw new AppException("Field email is empty");
         }else if(testMatcher(user.getEmail(), "^(.+)@(.+)$")){
             throw new AppException("String is not email pattern");
-        }else if(user.getRole().isBlank()){
-            throw new AppException("Field role is empty");
         }else if(user.getAddress().isBlank()){
             throw new AppException("Field address is empty");
         }else if(user.getPhone().isBlank()){
