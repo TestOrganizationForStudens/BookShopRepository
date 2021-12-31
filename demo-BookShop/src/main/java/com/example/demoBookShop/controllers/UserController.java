@@ -6,9 +6,16 @@ import com.example.demoBookShop.models.Role;
 import com.example.demoBookShop.models.User;
 import com.example.demoBookShop.repositories.RoleRepository;
 import com.example.demoBookShop.servicies.UserService;
+import com.example.demoBookShop.utility.AuthenticationRequest;
+import com.example.demoBookShop.utility.AuthenticationResponse;
+import com.example.demoBookShop.utility.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -17,26 +24,42 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 @RestController
-@RequestMapping("/api/user")
-@CrossOrigin
+@RequestMapping(path="/api/user")
+@CrossOrigin(origins = "*")
 public class UserController {
-
+    private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final Jwt jwt;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, Jwt jwt) {
         this.userService = userService;
+        this.authenticationManager=authenticationManager;
+        this.jwt=jwt;
     }
 
-    @GetMapping
+    @PostMapping(path="/login")
+    public ResponseEntity<Object> authentificationUser(@RequestBody AuthenticationRequest authRequest){
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        final UserDetails userDetails=userService.loadUserByUsername(authRequest.getUserName());
+        final String jwtToken=jwt.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
+    }
+
+    @GetMapping(path="/all")
+    @CrossOrigin(origins = "https://localchost:4200")
     public ResponseEntity<Object> getAllUser(){
         List<User> users=userService.getAllUser();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @GetMapping
-    @RequestMapping("{id}")
+    @RequestMapping("/all{id}")
     public ResponseEntity<Object> findUserById(@PathVariable Long id){
         try{
             User user= userService.findUserById(id);
@@ -86,9 +109,10 @@ public class UserController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody User user, @RequestBody Role role){
+    @PostMapping(path="/add")
+    public ResponseEntity<Object> createUser(@RequestBody User user){//, @RequestBody Role role){
         try{
+            Role role = new Role("ROLE_USER");
             userService.create(user, role);
             URI uri= URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString());
             return ResponseEntity.created(uri).body(user);
