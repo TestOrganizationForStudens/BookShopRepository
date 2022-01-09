@@ -1,4 +1,4 @@
-package com.example.demoBookShop.twilioSMS;
+package com.example.demoBookShop.smsEmailSender;
 
 import com.twilio.Twilio;
 import org.slf4j.Logger;

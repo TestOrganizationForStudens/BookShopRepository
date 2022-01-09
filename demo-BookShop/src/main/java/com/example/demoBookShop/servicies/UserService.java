@@ -7,8 +7,7 @@ import com.example.demoBookShop.models.UserRole;
 import com.example.demoBookShop.repositories.RoleRepository;
 import com.example.demoBookShop.repositories.UserRepository;
 import com.example.demoBookShop.repositories.UserRoleRepository;
-import com.example.demoBookShop.twilioSMS.SmsRequest;
-import com.example.demoBookShop.twilioSMS.TwilioSmsSender;
+import com.example.demoBookShop.smsEmailSender.SendInformationToUserSmsEmailPublisher;
 import com.example.demoBookShop.validators.RoleValidation;
 import com.example.demoBookShop.validators.UserValidation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +19,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 @Service
-//@Transactional
+
 @Slf4j
 public class UserService implements UserDetailsService {
 
@@ -38,18 +35,18 @@ public class UserService implements UserDetailsService {
     private final UserValidation userValidation=new UserValidation();
     private final RoleValidation roleValidation=new RoleValidation();
     private final PasswordEncoder passwordEncoder;
-    private final TwilioSmsSender twilioSmsSender;
+    private final SendInformationToUserSmsEmailPublisher smsEmeilService;
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        UserRoleRepository userRoleRepository,
-                       TwilioSmsSender twilioSmsSender) {
+                       SendInformationToUserSmsEmailPublisher publisher) {
         this.roleRepository=roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder=passwordEncoder;
         this.userRoleRepository=userRoleRepository;
-        this.twilioSmsSender=twilioSmsSender;
+        this.smsEmeilService =publisher;
     }
 
     public List<User> getAllUser() {
@@ -105,22 +102,11 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role roleFromDataBase=roleRepository.findByRole(role.getRole())
                 .orElseThrow(()->new AppException("No such role in database"));
-        sendSmsToUser(user);
+        smsEmeilService.sendMessageToUserSmsEmail(user);
         User userFromDataBase=userRepository.saveAndFlush(user);
         UserRole userRole=new UserRole(userFromDataBase, roleFromDataBase);
         userRoleRepository.saveAndFlush(userRole);
         return userFromDataBase;
-    }
-
-    private void sendSmsToUser(User user){
-        Random random = new Random();
-        Integer randomInt=random.nextInt(100_000);
-        String message= "Your BookShop activation code is: "+randomInt;
-        SmsRequest smsRequest= new SmsRequest(user.getPhone(), message);
-        twilioSmsSender.sendSms(smsRequest);
-//        StringBuilder builder= new StringBuilder();
-//        builder.append(randomInt).append(user.getUserName());
-//        user.setUserName(builder.toString());
     }
 
     public Role findByRole(String rol) throws AppException{
