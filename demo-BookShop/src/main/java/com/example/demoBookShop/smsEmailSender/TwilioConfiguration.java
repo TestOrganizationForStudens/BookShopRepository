@@ -1,4 +1,4 @@
-package com.example.demoBookShop.twilioSMS;
+package com.example.demoBookShop.smsEmailSender;
 
 import org.springframework.context.annotation.Configuration;
 
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 public class TwilioConfiguration {
 
     private String accountSid="AC5d262e10e439106c6039c011a6f5449e";
-    private String authToken="a1bcc37782a1462cb96beaa6ea627ff5";
+    private String authToken="8a62d85e47b60502dea3c04421ed733b";
     private String trialNumber="+16672132313";
 
     public TwilioConfiguration() {
